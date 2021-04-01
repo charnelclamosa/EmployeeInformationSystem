@@ -6,6 +6,8 @@ import Routes from "./router";
 import VueRouter from "vue-router";
 import store from "./store";
 import "@mdi/font/css/materialdesignicons.css";
+import Vuelidate from 'vuelidate';
+import Notifications from 'vue-notification';
 
 window.Vue = require('vue').default;
 
@@ -15,6 +17,8 @@ Vue.use(Vuetify, {
     }
 });
 Vue.use(VueRouter);
+Vue.use(Vuelidate);
+Vue.use(Notifications);
 
 Vue.component('primary-button', require('./components/base/PrimaryButton').default);
 

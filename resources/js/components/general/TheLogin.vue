@@ -5,9 +5,9 @@
                 
             </div>
             <div class="content">
-                <v-text-field dense label="Username"></v-text-field>
-                <v-text-field dense label="Password"></v-text-field>
-                <primary-button text="Login"></primary-button>
+                <v-text-field dense label="Username" v-model="User.Username"></v-text-field>
+                <v-text-field dense label="Password" v-model="User.Password"></v-text-field>
+                <primary-button @click.native="authenticate()" text="Login"></primary-button>
             </div>
         </v-card>
     </div>
@@ -16,7 +16,16 @@
 export default {
     data: () => {
         return {
-
+            User: {},
+        }
+    },
+    methods: {
+        authenticate() {
+            try {
+                this.$router.push({name: 'home'})
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }
