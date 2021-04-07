@@ -6,6 +6,7 @@ import Routes from "./router";
 import VueRouter from "vue-router";
 import store from "./store";
 import "@mdi/font/css/materialdesignicons.css";
+import 'vuetify/dist/vuetify.min.css';
 import Vuelidate from 'vuelidate';
 import Notifications from 'vue-notification';
 

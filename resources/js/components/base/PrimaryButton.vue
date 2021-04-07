@@ -1,5 +1,5 @@
 <template>
-    <v-btn color="primary">{{text}}</v-btn>
+    <v-btn tile color="primary">{{text}}</v-btn>
 </template>
 <script>
 export default {
