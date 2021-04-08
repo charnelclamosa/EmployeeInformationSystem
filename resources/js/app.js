@@ -22,6 +22,7 @@ Vue.use(Vuelidate);
 Vue.use(Notifications);
 
 Vue.component('primary-button', require('./components/base/PrimaryButton').default);
+Vue.component('block-button', require('./components/base/BlockButton').default);
 
 const app = new Vue({
     el: '#app',

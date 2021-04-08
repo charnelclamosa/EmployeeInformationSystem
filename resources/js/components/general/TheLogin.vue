@@ -2,15 +2,13 @@
 <div id="login">
     <v-card tile class="form">
         <div class="image">
-            <div>
-                <v-img src="/images/login-logo.svg" eager alt="" width="440"></v-img>
-            </div>
+            <v-img src="/images/login-logo.svg" eager alt="" width="440"></v-img>
         </div>
         <div class="content">
             <h4 class="mb-4">Employee Information System</h4>
-        <v-text-field dense label="Username" v-model="user.username" :error-messages="usernameValidation" @blur="$v.user.username.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
-        <v-text-field dense label="Password" v-model="user.password" :error-messages="passwordValidation" @blur="$v.user.password.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
-        <primary-button @click.native="authenticate(user)" text="Login"></primary-button>
+            <v-text-field dense label="Username" v-model="user.username" :error-messages="usernameValidation" @blur="$v.user.username.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
+            <v-text-field dense label="Password" v-model="user.password" :error-messages="passwordValidation" @blur="$v.user.password.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
+            <primary-button @click.native="authenticate(user)" text="Login"></primary-button>
         </div>
     </v-card>
 </div>
@@ -67,8 +65,10 @@ export default {
                     username: user.username,
                     password: user.password
                 });
+                response.data.user.token = await response.data.token;
+                await this.$store.dispatch('authenticationSuccess', response.data.user);
+                this.$router.push({name: 'home'});
                 this.notification('success', 'Login successful.');
-                // this.$router.push({name: 'home'})
             } catch (error) {
                 console.log(error);
                 this.notification('error', 'Login failed.');
@@ -87,18 +87,20 @@ export default {
     background: url('/images/circles.svg');
     background-size: cover;
 }
+
 .form {
     display: flex;
     justify-content: center;
     background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
-    height: 50%;
-    width: 70%;
+    width: 60%;
 }
+
 .image {
     display: flex;
     flex: auto;
     align-items: center;
     justify-content: center;
+    padding: 2rem;
 }
 
 .content {
@@ -106,8 +108,9 @@ export default {
     flex-direction: column;
     width: 30%;
     padding: 4rem 1.5rem;
-    border: 1.5px solid dodgerblue;
+    border: 2px solid dodgerblue;
 }
+
 .content h3 {
     font-size: smaller;
     text-align: center;
