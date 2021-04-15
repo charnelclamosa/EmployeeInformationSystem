@@ -37,8 +37,21 @@ class UserController extends Controller
         $user->username = $request->user['username'];
         $user->password = Hash::make($request->user['password']);
         $user->role_code = $request->user['roleId'];
-        $user->updated_by = $request->updated_by;
+        $user->updated_by = $request->updatedBy;
         $user->save();
         return response()->json(['message' => 'New user has been created.'], 201);
     }
+
+    public function update(Request $request, $id) {
+        $user = User::findOrFail($id);
+        $user->update([
+            'name' => $request->user['name'],
+            'username' => $request->user['username'],
+            'role_code' => $request->user['roleId'],
+            'updated_by' => $request->updatedBy
+        ]);
+        return response()->json(['message' => 'User has been updated.'], 200);
+    }
+
+    public function password($id) {}
 }

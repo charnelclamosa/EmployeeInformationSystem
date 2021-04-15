@@ -31,7 +31,7 @@
             </div>
             <div class="dialog-footer">
                 <outline-button @click.native="newUserDialog = false" text="Cancel"></outline-button>
-                <primary-button @click.native="createUser(newUser)" text="Create" :disabled="btnLoader" :loading="btnLoader" class="ml-2"></primary-button>
+                <primary-button @click.native="createUser(newUser, userDetails.username)" text="Create" :disabled="btnLoader" :loading="btnLoader" class="ml-2"></primary-button>
             </div>
         </v-card>
     </v-dialog>
@@ -46,7 +46,7 @@
             </div>
             <div class="dialog-footer">
                 <outline-button @click.native="updateUserDialog = false" text="Cancel"></outline-button>
-                <primary-button @click.native="createUser(updateUser)" text="Create" :disabled="btnLoader" :loading="btnLoader" class="ml-2"></primary-button>
+                <primary-button @click.native="modifyUser(updateUser, userDetails.username); modifyUserPassword(updateUser, userDetails.username)" text="Create" :disabled="btnLoader" :loading="btnLoader" class="ml-2"></primary-button>
             </div>
         </v-card>
     </v-dialog>
@@ -57,6 +57,7 @@ import { required } from 'vuelidate/lib/validators';
 export default {
     data() {
         return {
+            userDetails: {},
             btnLoader: false,
             newUserDialog: false,
             updateUserDialog: false,
@@ -152,8 +153,12 @@ export default {
     created() {
         this.getRoles();
         this.getUsers();
+        this.getUserDetails();
     },
     methods: {
+        getUserDetails() {
+            this.userDetails = this.$store.getters.getUserData;
+        },
         notification(type, text) {
             this.$notify({
                 group: 'app',
@@ -198,20 +203,54 @@ export default {
             this.updateUser = Object.assign({}, parameter);
             this.updateUserDialog = true;
         },
-        async createUser(data) {
+        async createUser(data, username) {
             this.$v.newUser.$touch();
             if(this.$v.newUser.$invalid) return;
             try {
                 this.btnLoader = true;
-                const vuexUser = await this.$store.getters.getUserData;
                 await axios.post(`${this.$url}/api/users`, {
                     user: data,
-                    updated_by: vuexUser.username
+                    updatedBy: username
                 });
                 this.btnLoader = false;
                 this.newUserDialog = false;
+                this.notification('success', 'Data has been created.');
                 this.newUser = {};
                 this.getUsers();
+            } catch (error) {
+                console.log(error);
+                this.btnLoader = false;
+                this.notification('error', 'Oops! Something went wrong.');
+            }
+        },
+        async modifyUser(data, username) {
+            this.$v.updateUser.$touch();
+            if(this.$v.newUser.$invalid) return;
+            try {
+                this.btnLoader = true;
+                await axios.put(`${this.$url}/api/users/` + data.id, {
+                    user: data,
+                    updatedBy: username
+                });
+                this.btnLoader = false;
+                this.updateUserDialog = false;
+                this.notification('success', 'Data has been updated.');
+                this.updateUser = {};
+                this.getUsers();
+            } catch (error) {
+                console.log(error);
+                this.btnLoader = false;
+                this.notification('error', 'Oops! Something went wrong.');
+            }
+        },
+        async modifyUserPassword(parameter, username) {
+            try {
+                this.btnLoader = true;
+                await axios.patch(`${this.$url}/api/users/password/` + parameter.id, {
+                    newPassword: parameter.password,
+                    updatedBy: username
+                });
+                this.btnLoader = false;
             } catch (error) {
                 console.log(error);
                 this.btnLoader = false;

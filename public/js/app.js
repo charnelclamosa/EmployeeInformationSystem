@@ -2401,6 +2401,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      userDetails: {},
       btnLoader: false,
       newUserDialog: false,
       updateUserDialog: false,
@@ -2501,8 +2502,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   created: function created() {
     this.getRoles();
     this.getUsers();
+    this.getUserDetails();
   },
   methods: {
+    getUserDetails: function getUserDetails() {
+      this.userDetails = this.$store.getters.getUserData;
+    },
     notification: function notification(type, text) {
       this.$notify({
         group: 'app',
@@ -2618,11 +2623,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.updateUser = Object.assign({}, parameter);
       this.updateUserDialog = true;
     },
-    createUser: function createUser(data) {
+    createUser: function createUser(data, username) {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var vuexUser;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
@@ -2640,40 +2644,130 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context3.prev = 3;
                 _this3.btnLoader = true;
                 _context3.next = 7;
-                return _this3.$store.getters.getUserData;
-
-              case 7:
-                vuexUser = _context3.sent;
-                _context3.next = 10;
                 return axios.post("".concat(_this3.$url, "/api/users"), {
                   user: data,
-                  updated_by: vuexUser.username
+                  updatedBy: username
                 });
 
-              case 10:
+              case 7:
                 _this3.btnLoader = false;
                 _this3.newUserDialog = false;
+
+                _this3.notification('success', 'Data has been created.');
+
                 _this3.newUser = {};
 
                 _this3.getUsers();
 
-                _context3.next = 21;
+                _context3.next = 19;
                 break;
 
-              case 16:
-                _context3.prev = 16;
+              case 14:
+                _context3.prev = 14;
                 _context3.t0 = _context3["catch"](3);
                 console.log(_context3.t0);
                 _this3.btnLoader = false;
 
                 _this3.notification('error', 'Oops! Something went wrong.');
 
-              case 21:
+              case 19:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[3, 16]]);
+        }, _callee3, null, [[3, 14]]);
+      }))();
+    },
+    modifyUser: function modifyUser(data, username) {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _this4.$v.updateUser.$touch();
+
+                if (!_this4.$v.newUser.$invalid) {
+                  _context4.next = 3;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 3:
+                _context4.prev = 3;
+                _this4.btnLoader = true;
+                _context4.next = 7;
+                return axios.put("".concat(_this4.$url, "/api/users/") + data.id, {
+                  user: data,
+                  updatedBy: username
+                });
+
+              case 7:
+                _this4.btnLoader = false;
+                _this4.updateUserDialog = false;
+
+                _this4.notification('success', 'Data has been updated.');
+
+                _this4.updateUser = {};
+
+                _this4.getUsers();
+
+                _context4.next = 19;
+                break;
+
+              case 14:
+                _context4.prev = 14;
+                _context4.t0 = _context4["catch"](3);
+                console.log(_context4.t0);
+                _this4.btnLoader = false;
+
+                _this4.notification('error', 'Oops! Something went wrong.');
+
+              case 19:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[3, 14]]);
+      }))();
+    },
+    modifyUserPassword: function modifyUserPassword(parameter, username) {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                _this5.btnLoader = true;
+                _context5.next = 4;
+                return axios.patch("".concat(_this5.$url, "/api/users/password/") + parameter.id, {
+                  newPassword: parameter.password,
+                  updatedBy: username
+                });
+
+              case 4:
+                _this5.btnLoader = false;
+                _context5.next = 12;
+                break;
+
+              case 7:
+                _context5.prev = 7;
+                _context5.t0 = _context5["catch"](0);
+                console.log(_context5.t0);
+                _this5.btnLoader = false;
+
+                _this5.notification('error', 'Oops! Something went wrong.');
+
+              case 12:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, null, [[0, 7]]);
       }))();
     }
   }
@@ -24068,7 +24162,10 @@ var render = function() {
                     },
                     nativeOn: {
                       click: function($event) {
-                        return _vm.createUser(_vm.newUser)
+                        return _vm.createUser(
+                          _vm.newUser,
+                          _vm.userDetails.username
+                        )
                       }
                     }
                   })
@@ -24217,7 +24314,11 @@ var render = function() {
                     },
                     nativeOn: {
                       click: function($event) {
-                        return _vm.createUser(_vm.updateUser)
+                        _vm.modifyUser(_vm.updateUser, _vm.userDetails.username)
+                        _vm.modifyUserPassword(
+                          _vm.updateUser,
+                          _vm.userDetails.username
+                        )
                       }
                     }
                   })
