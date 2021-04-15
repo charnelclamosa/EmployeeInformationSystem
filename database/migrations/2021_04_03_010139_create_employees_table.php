@@ -21,11 +21,11 @@ class CreateEmployeesTable extends Migration
             $table->date('birth_date');
             $table->string('address');
             $table->string('contact_no');
-            $table->string('job_title_code', 5);
-            $table->string('contract_status', 3);
-            $table->string('department_code', 5);
-            $table->string('section_code', 5);
-            $table->string('team_code', 5);
+            $table->integer('job_title_code');
+            $table->integer('contract_status');
+            $table->integer('department_code');
+            $table->integer('section_code');
+            $table->integer('team_code');
             $table->timestamps();
             $table->softDeletes();
             $table->string('updated_by');

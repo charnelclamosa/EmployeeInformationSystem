@@ -1,5 +1,5 @@
 <template>
-    <v-btn tile :disabled="disabled" :loading="loading" color="primary">{{text}}</v-btn>
+    <v-btn tile outlined :disabled="disabled" :loading="loading" color="error">{{text}}</v-btn>
 </template>
 <script>
 export default {

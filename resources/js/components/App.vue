@@ -4,7 +4,7 @@
     <transition name="fade">
         <router-view></router-view>
     </transition>
-    <router-view name="footer"></router-view>
+    <!-- <router-view name="footer"></router-view> -->
     <notifications group="app" position="bottom right" />
 </v-app>
 </template>

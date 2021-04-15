@@ -1,9 +1,11 @@
 <template>
 <div>
-    <!-- <progress-bar></progress-bar> -->
+    <progress-bar></progress-bar>
     <v-app-bar dense class="app-bar" dark>
         <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
         <v-toolbar-title class="system-font">{{systemName}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn small icon @click="logout()" :disabled="btnLoader" :loading="btnLoader"><v-icon>mdi-logout</v-icon></v-btn>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
         <template v-slot:prepend>
@@ -53,11 +55,6 @@
                 </v-list-group>
             </v-list-item-group>
         </v-list>
-        <template v-slot:append>
-            <div class="pa-2">
-                <block-button @click.native="logout()" text="Logout"></block-button>
-            </div>
-        </template>
     </v-navigation-drawer>
 </div>
 </template>
@@ -68,7 +65,8 @@ export default {
         return {
             drawer: false,
             group: null,
-            systemName: 'Employee Information System'
+            systemName: 'Employee Information System',
+            btnLoader: false
 
         }
     },
@@ -82,11 +80,14 @@ export default {
         },
         async logout() {
             try {
+                this.btnLoader = true;
                 await axios.post('api/logout');
                 this.$store.dispatch('authenticationClear');
-                this.$router.push({name: 'login'})
+                this.btnLoader = false;
+                this.$router.push({name: 'login'});
             } catch (error) {
-                console.log(error)
+                console.log(error);
+                this.btnLoader = false;
             }
         }
     }
@@ -96,7 +97,7 @@ export default {
 
 <style scoped>
 .app-bar {
-    background-image: linear-gradient(15deg, #033E44 0%, #0ABCD0 100%);
+    background-image: linear-gradient(15deg, #03588C 0%, #5095BF 100%);
     /* max-height: 20vh !important; */
 }
 </style>

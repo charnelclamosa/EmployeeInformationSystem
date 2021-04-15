@@ -20,15 +20,18 @@ Vue.use(Vuetify, {
 Vue.use(VueRouter);
 Vue.use(Vuelidate);
 Vue.use(Notifications);
-
+Vue.prototype.$url = window.location.origin;
 Vue.component('primary-button', require('./components/base/PrimaryButton').default);
+Vue.component('outline-button', require('./components/base/OutlineButton').default);
 Vue.component('block-button', require('./components/base/BlockButton').default);
+Vue.component('base-header', require('./components/base/Header').default);
+Vue.component('progress-bar', require('./components/base/ProgressBar').default);
 
 const app = new Vue({
     el: '#app',
     store,
     router: Routes,
-    vuetify: new Vuetify(),
+    vuetify: new Vuetify({theme: {themes: {light: {primary: '#03588C', secondary: '#5095BF'}}}}),
     render: h => h(App)
 });
 

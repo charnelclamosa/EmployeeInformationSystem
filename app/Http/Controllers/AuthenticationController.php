@@ -25,10 +25,14 @@ class AuthenticationController extends Controller
         } else {
             if($this->hasTooManyLoginAttempts($request)) {
                 $this->fireLockOutEvent($request);
-                return this->sendLockOutResponse($request);
+                return $this->sendLockOutResponse($request);
             }
             $this->incrementLoginAttempts($request);
             return response()->json(['message' => 'User does not exists.'], 404);
         }
+    }
+    public function logout(Request $request) {
+        $request->user()->tokens()->delete();
+        return response()->json(['message' => 'Logout successful.'], 200);
     }
 }

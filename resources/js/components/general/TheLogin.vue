@@ -6,9 +6,9 @@
         </div>
         <div class="content">
             <h4 class="mb-4">Employee Information System</h4>
-            <v-text-field dense label="Username" v-model="user.username" :error-messages="usernameValidation" @blur="$v.user.username.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
-            <v-text-field dense label="Password" v-model="user.password" :error-messages="passwordValidation" @blur="$v.user.password.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
-            <primary-button @click.native="authenticate(user)" text="Login"></primary-button>
+            <v-text-field dense autofocus label="Username" v-model="user.username" :error-messages="usernameValidation" @blur="$v.user.username.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
+            <v-text-field dense type="password" label="Password" v-model="user.password" :error-messages="passwordValidation" @blur="$v.user.password.$touch()" @keyup.enter="authenticate(user)"></v-text-field>
+            <primary-button :disabled="btnLoader" :loading="btnLoader" @click.native="authenticate(user)" text="Login"></primary-button>
         </div>
     </v-card>
 </div>
@@ -22,6 +22,7 @@ export default {
     data: () => {
         return {
             user: {},
+            btnLoader: false
         }
     },
     validations: {
@@ -61,16 +62,19 @@ export default {
             this.$v.user.$touch();
             if (this.$v.user.$invalid) return;
             try {
+                this.btnLoader = true;
                 const response = await axios.post('api/login', {
                     username: user.username,
                     password: user.password
                 });
                 response.data.user.token = await response.data.token;
                 await this.$store.dispatch('authenticationSuccess', response.data.user);
+                this.btnLoader = false;
                 this.$router.push({name: 'home'});
                 this.notification('success', 'Login successful.');
             } catch (error) {
                 console.log(error);
+                this.btnLoader = false;
                 this.notification('error', 'Login failed.');
             }
         }

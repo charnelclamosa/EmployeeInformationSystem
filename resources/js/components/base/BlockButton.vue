@@ -1,5 +1,5 @@
 <template>
-    <v-btn tile block :disabled="disabled" color="primary">{{text}}</v-btn>
+    <v-btn tile block :disabled="disabled" :loading="loading" color="primary">{{text}}</v-btn>
 </template>
 <script>
 export default {
@@ -8,6 +8,9 @@ export default {
             type: String
         },
         disabled: {
+            type: Boolean
+        },
+        loading: {
             type: Boolean
         }
     }

@@ -4,6 +4,7 @@ import Login from '../views/layouts/TheLogin';
 import Home from '../views/layouts/TheHome';
 import Footer from './components/general/TheFooter';
 import Navigation from './components/general/TheNavigation';
+import Users from '../views/layouts/master/Users';
 
 Vue.use(VueRouter);
 
@@ -23,7 +24,16 @@ const router = new VueRouter({
             name: 'home',
             components: {
                 default: Home,
-                footer: Footer,
+                // footer: Footer,
+                nav: Navigation
+            }
+        },
+        {
+            path: '/users',
+            name: 'users',
+            components: {
+                default: Users,
+                // footer: Footer,
                 nav: Navigation
             }
         }

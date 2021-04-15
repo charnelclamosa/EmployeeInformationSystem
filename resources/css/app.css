@@ -5,5 +5,34 @@
 }
 
 .normal-page {
-    min-height: 85vh;
+    min-height: 90vh;
+}
+
+.title-font {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+}
+
+.card-title {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    background-image: linear-gradient(15deg, #03588C 0%, #5095BF 100%);
+    color: white;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.content-body {
+    padding-bottom: 1rem;
+}
+
+.content-footer {
+    display: flex;
+    justify-content: flex-end;
 }

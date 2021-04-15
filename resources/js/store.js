@@ -8,7 +8,6 @@ export default new Vuex.Store({
     state: {
         user: {},
         progressBar: false,
-        cardProgressBar: false,
     },
     mutations: {
         showProgressBar: (state) => {
@@ -16,12 +15,6 @@ export default new Vuex.Store({
         },
         hideProgressBar: (state) => {
             (state.progressBar = false)
-        },
-        showCardProgressBar: (state) => {
-            (state.cardProgressBar = true)
-        },
-        hideCardProgressBar: (state) => {
-            (state.cardProgressBar = false)
         },
         authenticationSuccess: (state, payload) => {
             (state.user = payload)
@@ -36,12 +29,6 @@ export default new Vuex.Store({
         },
         hideProgressBar: (context) => {
             context.commit('hideProgressBar')
-        },
-        showCardProgressBar: (context) => {
-            context.commit('showCardProgressBar')
-        },
-        hideCardProgressBar: (context) => {
-            context.commit('hideCardProgressBar')
         },
         authenticationSuccess: (context, payload) => {
             context.commit('authenticationSuccess', payload)
