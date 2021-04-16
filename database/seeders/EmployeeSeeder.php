@@ -15,6 +15,6 @@ class EmployeeSeeder extends Seeder
     public function run()
     {
         Employee::truncate();
-        factory(App\Models\Employee::class, 500)->create();
+        Employee::factory()->count(500)->create();
     }
 }

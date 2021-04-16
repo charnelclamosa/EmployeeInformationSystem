@@ -1,8 +1,13 @@
 <template>
 <div class="normal-page">
     <div class="content">
+        <div class="content-head">
+            <div>
+                <v-text-field dense placeholder="Search by name" v-model="searchData"></v-text-field>
+            </div>
+        </div>
         <div class="content-body">
-            <v-data-table dense :headers="tableHead" :items="users" class="elevation-2">
+            <v-data-table dense :headers="tableHead" :items="resultSearch" class="elevation-2">
                 <template v-slot:[`item.status`]="{ item }">
                     <v-chip label outlined small :color="item.deleted_at ? 'error' : 'success'">{{item.deleted_at ? 'Deleted' : 'Active'}}</v-chip>
                 </template>
@@ -46,7 +51,7 @@
             </div>
             <div class="dialog-footer">
                 <outline-button @click.native="updateUserDialog = false" text="Cancel"></outline-button>
-                <primary-button @click.native="modifyUser(updateUser, userDetails.username); modifyUserPassword(updateUser, userDetails.username)" text="Create" :disabled="btnLoader" :loading="btnLoader" class="ml-2"></primary-button>
+                <primary-button @click.native="modifyUser(updateUser, userDetails.username); modifyUserPassword(updateUser, userDetails.username)" text="Update" :disabled="btnLoader" :loading="btnLoader" class="ml-2"></primary-button>
             </div>
         </v-card>
     </v-dialog>
@@ -97,7 +102,8 @@ export default {
             roles: [],
             newUser: {},
             updateUser: {},
-            showPassword: false
+            showPassword: false,
+            searchData: null
         }
     },
     validations: {
@@ -148,6 +154,16 @@ export default {
             if(!this.$v.updateUser.username.$dirty) return errors;
             !this.$v.updateUser.username.required && errors.push('This field is required');
             return errors;
+        },
+        resultSearch() {
+            if(!this.searchData) {
+                return this.users;
+            } else {
+                return this.users.filter((item) => {
+                return this.searchData.toLowerCase().split(' ').every(v => item.name.toLowerCase().includes(v));
+            });
+            }
+            
         }
     },
     created() {
@@ -225,7 +241,7 @@ export default {
         },
         async modifyUser(data, username) {
             this.$v.updateUser.$touch();
-            if(this.$v.newUser.$invalid) return;
+            if(this.$v.updateUser.$invalid) return;
             try {
                 this.btnLoader = true;
                 await axios.put(`${this.$url}/api/users/` + data.id, {
@@ -256,7 +272,31 @@ export default {
                 this.btnLoader = false;
                 this.notification('error', 'Oops! Something went wrong.');
             }
-        }
+        },
+        async deleteUser(parameter) {
+            try {
+                this.$store.dispatch('showProgressBar');
+                await axios.patch(`${this.$url}/api/users/delete/` + parameter.id);
+                this.notification('success', 'Delete successful.');
+                this.getUsers();
+            } catch (error) {
+                console.log(error);
+                this.$store.dispatch('hideProgressBar');
+                this.notification('error', 'Oops! Something went wrong.');
+            }
+        },
+        async restoreUser(parameter) {
+            try {
+                this.$store.dispatch('showProgressBar');
+                await axios.patch(`${this.$url}/api/users/restore/` + parameter.id);
+                this.notification('success', 'Restore successful.');
+                this.getUsers();
+            } catch (error) {
+                console.log(error);
+                this.$store.dispatch('hideProgressBar');
+                this.notification('error', 'Oops! Something went wrong.');
+            }
+        },
     }
 }
 </script>
@@ -270,5 +310,9 @@ export default {
     display: flex;
     justify-content: flex-end;
     padding: 0 2rem 1rem 2rem;
+}
+.content-head {
+    display: flex;
+    justify-content: flex-end;
 }
 </style>

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     public function index() {
-        return User::select(
+        return User::withTrashed()->select(
             'users.id',
             'users.name',
             'users.username',
@@ -20,6 +20,12 @@ class UserController extends Controller
         )
         ->join('roles', 'roles.id', 'users.role_code')
         ->get();
+    }
+
+    public function duplicate($username) {
+        $user = User::where('username', $username)->get();
+        if(!$user) return;
+        return response($user);
     }
 
     public function store(Request $request) {
@@ -47,11 +53,30 @@ class UserController extends Controller
         $user->update([
             'name' => $request->user['name'],
             'username' => $request->user['username'],
-            'role_code' => $request->user['roleId'],
+            'role_code' => $request->user['role_code'],
             'updated_by' => $request->updatedBy
         ]);
         return response()->json(['message' => 'User has been updated.'], 200);
     }
 
-    public function password($id) {}
+    public function password(Request $request, $id) {
+        $user = User::findOrFail($id);
+        $user->update([
+            'Password' => Hash::make($request->newPassword),
+            'updated_by' => $request->updatedBy
+        ]);
+        return response()->json(['message' => 'Update password successful.'], 200);
+    }
+
+    public function delete($id) {
+        $user = User::findOrFail($id);
+        $user->delete($user->all());
+        return response()->json(['message' => 'Delete successful.'], 200);
+    }
+
+    public function restore($id) {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->restore($user->all());
+        return response()->json(['message' => 'Restore successful.'], 200);
+    }
 }

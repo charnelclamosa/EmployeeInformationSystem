@@ -112,7 +112,7 @@ export default {
     flex-direction: column;
     width: 30%;
     padding: 4rem 1.5rem;
-    border: 2px solid dodgerblue;
+    border: 2px solid #03588C;
 }
 
 .content h3 {

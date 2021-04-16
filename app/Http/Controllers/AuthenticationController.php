@@ -22,14 +22,13 @@ class AuthenticationController extends Controller
             $this->clearLoginAttempts($request);
             $token = $user->createToken($user->username)->plainTextToken;
             return response()->json(['token' => $token, 'user' => $user], 201);
-        } else {
-            if($this->hasTooManyLoginAttempts($request)) {
-                $this->fireLockOutEvent($request);
-                return $this->sendLockOutResponse($request);
-            }
-            $this->incrementLoginAttempts($request);
-            return response()->json(['message' => 'User does not exists.'], 404);
         }
+        if($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockOutEvent($request);
+            return $this->sendLockOutResponse($request);
+        }
+        $this->incrementLoginAttempts($request);
+        return response()->json(['message' => 'User does not exists.'], 404);
     }
     public function logout(Request $request) {
         $request->user()->tokens()->delete();

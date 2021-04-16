@@ -17,9 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', 'AuthenticationController@login');
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('logout', 'AuthenticationController@logout');
+
     Route::get('users', 'UserController@index');
+    Route::get('users/{username}', 'UserController@duplicate');
     Route::post('users', 'UserController@store');
     Route::put('users/{id}', 'UserController@update');
     Route::patch('users/password/{id}', 'UserController@password');
+    Route::patch('users/delete/{id}', 'UserController@delete');
+    Route::patch('users/restore/{id}', 'UserController@restore');
+
     Route::get('roles', 'RoleController@index');
 });

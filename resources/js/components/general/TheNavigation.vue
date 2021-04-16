@@ -11,38 +11,36 @@
         <template v-slot:prepend>
             <v-list-item two-line>
                 <v-list-item-avatar>
-                    <img src="https://randomuser.me/api/portraits/lego/5.jpg">
+                    <img src="images/avatar.svg" alt="">
                 </v-list-item-avatar>
-
                 <v-list-item-content>
-                    <v-list-item-title>Charnel S. Clamosa</v-list-item-title>
-                    <v-list-item-subtitle>System Administrator</v-list-item-subtitle>
+                    <v-list-item-title>{{user.name}}</v-list-item-title>
+                    <v-list-item-subtitle>{{user.role_code == 1 ? 'Administrator' : 'User'}}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
         </template>
-
         <v-divider></v-divider>
         <v-list nav dense>
-            <v-list-item-group v-model="group" active-class="teal--text text--accent-4">
+            <v-list-item-group v-model="group" active-class="blue--text text--darken-4">
                 <v-list-item to="/home">
                     <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon>mdi-view-dashboard</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title>Home</v-list-item-title>
+                    <v-list-item-title>Dashboard</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/print">
+                <v-list-item to="/employees">
                     <v-list-item-icon>
-                        <v-icon>mdi-printer</v-icon>
+                        <v-icon>mdi-account-group</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title>Print Stickers</v-list-item-title>
+                    <v-list-item-title>Employees</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/monitoring">
+                <v-list-item to="/reports">
                     <v-list-item-icon>
                         <v-icon>mdi-table</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title>Monitoring</v-list-item-title>
+                    <v-list-item-title>Reports</v-list-item-title>
                 </v-list-item>
-                <v-list-group no-action prepend-icon="mdi-cog">
+                <v-list-group v-show="user.role_code == 1" no-action prepend-icon="mdi-cog">
                     <template v-slot:activator>
                         <v-list-item-title>Admin Panel</v-list-item-title>
                     </template>
@@ -66,17 +64,17 @@ export default {
             drawer: false,
             group: null,
             systemName: 'Employee Information System',
-            btnLoader: false
-
+            btnLoader: false,
+            user: {}
         }
     },
     created() {
-        this.initializeToken()
+        this.initializeToken();
     },
     methods: {
         initializeToken() {
-            const user = this.$store.getters.getUserData;
-            axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+            this.user = this.$store.getters.getUserData;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${this.user.token}`;
         },
         async logout() {
             try {
@@ -98,6 +96,10 @@ export default {
 <style scoped>
 .app-bar {
     background-image: linear-gradient(15deg, #03588C 0%, #5095BF 100%);
-    /* max-height: 20vh !important; */
+}
+@media screen and (max-width: 376px) {
+    .v-toolbar__title {
+        font-size: 1rem !important;
+    }
 }
 </style>

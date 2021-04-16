@@ -26,12 +26,13 @@ Vue.component('outline-button', require('./components/base/OutlineButton').defau
 Vue.component('block-button', require('./components/base/BlockButton').default);
 Vue.component('base-header', require('./components/base/Header').default);
 Vue.component('progress-bar', require('./components/base/ProgressBar').default);
+Vue.component('dashboard-card', require('./components/base/DashboardCard').default);
 
 const app = new Vue({
     el: '#app',
     store,
     router: Routes,
-    vuetify: new Vuetify({theme: {themes: {light: {primary: '#03588C', secondary: '#5095BF'}}}}),
+    vuetify: new Vuetify({ theme: { themes: { light: { primary: '#03588C', secondary: '#5095BF' } } } }),
     render: h => h(App)
 });
 
